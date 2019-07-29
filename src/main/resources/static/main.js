@@ -811,6 +811,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_services_generic_service__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/app/services/generic.service */ "./src/app/services/generic.service.ts");
 /* harmony import */ var _cad_equipe_cad_equipe_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../cad-equipe/cad-equipe.component */ "./src/app/equipes/cad-equipe/cad-equipe.component.ts");
 /* harmony import */ var src_app_core_msg_service__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! src/app/core/msg.service */ "./src/app/core/msg.service.ts");
+/* harmony import */ var src_app_services_sidenav_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! src/app/services/sidenav.service */ "./src/app/services/sidenav.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -831,19 +832,25 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var ListaEquipesComponent = /** @class */ (function () {
-    function ListaEquipesComponent(bottomSheet, router, user, service, msgService, dialog) {
+    function ListaEquipesComponent(bottomSheet, router, user, service, msgService, dialog, _sideNavService) {
         this.bottomSheet = bottomSheet;
         this.router = router;
         this.user = user;
         this.service = service;
         this.msgService = msgService;
         this.dialog = dialog;
+        this._sideNavService = _sideNavService;
         this.displayedColumns = ['id', 'nome', 'data', 'detalhes'];
     }
     ListaEquipesComponent.prototype.ngOnInit = function () {
-        if (!this.user.isLogged())
-            this.router.navigate(['login']);
+        var _this = this;
+        this._sideNavService.getLogado().subscribe(function (logado) {
+            if (!logado) {
+                _this.router.navigate(['login']);
+            }
+        });
         this.dataSource = new _equipes_data_source__WEBPACK_IMPORTED_MODULE_1__["EquipesDataSource"](this.service);
         this.loadPages();
     };
@@ -899,7 +906,8 @@ var ListaEquipesComponent = /** @class */ (function () {
             src_app_services_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"],
             src_app_services_generic_service__WEBPACK_IMPORTED_MODULE_8__["GenericService"],
             src_app_core_msg_service__WEBPACK_IMPORTED_MODULE_10__["MsgService"],
-            _angular_material_dialog__WEBPACK_IMPORTED_MODULE_6__["MatDialog"]])
+            _angular_material_dialog__WEBPACK_IMPORTED_MODULE_6__["MatDialog"],
+            src_app_services_sidenav_service__WEBPACK_IMPORTED_MODULE_11__["SidenavService"]])
     ], ListaEquipesComponent);
     return ListaEquipesComponent;
 }());
@@ -1131,7 +1139,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"panel panel-default\" >\n  <div class=\"panel-body\">\n   <h1 class=\"display-4\">\n     Solicitações de Ferias\n    </h1>\n\n  </div>\n</div>\n\n\n<div class=\"panel panel-default\">\n<div class=\"panel-body\">\n  <div class=\"row\">\n      <div class=\"col-md-6\">\n          <mat-form-field class=\"full-width\">\n            <input matInput placeholder=\"Buscar\" [(ngModel)]=\"nome\" (keyup.enter)=\"loadPages()\">\n          </mat-form-field>\n      </div>\n      <div class=\"col-md-6\">\n          <button mat-raised-button color=\"accent\" class=\"full-width\" aria-label=\"Buscar\" (click)=\"loadPages()\">\n              Buscar <mat-icon>search</mat-icon>\n          </button>\n      </div>\n  </div>\n</div>\n<div class=\"panel-body\">\n    <div class=\"mat-elevation-z8\">\n\n        <table mat-table [dataSource]=\"dataSource\">\n          <ng-container  matColumnDef=\"funcionario\">\n            <th mat-header-cell *matHeaderCellDef> Funcionario. </th>\n            <td mat-cell *matCellDef=\"let element\"> {{element.funcionario.nome}} </td>\n          </ng-container>\n          \n          <ng-container matColumnDef=\"equipe\">\n              <th mat-header-cell *matHeaderCellDef  > Equipe  </th>\n              <td mat-cell *matCellDef=\"let element\" > {{element.funcionario.equipe.nome}} </td>\n          </ng-container>\n      \n          <ng-container matColumnDef=\"dataIni\">\n              <th mat-header-cell *matHeaderCellDef > Data Ini </th>\n              <td mat-cell *matCellDef=\"let element\" > {{element.dataInicial}} </td>\n          </ng-container>\n\n          <ng-container matColumnDef=\"dataFim\">\n            <th mat-header-cell *matHeaderCellDef > Data Final </th>\n            <td mat-cell *matCellDef=\"let element\" > {{element.dataFinal}} </td>\n          </ng-container>\n\n          <!-- Btn  -->\n          <ng-container matColumnDef=\"detalhes\">\n              <th mat-header-cell *matHeaderCellDef class=\"column-right\" > Acao </th>\n              <td mat-cell *matCellDef=\"let element\" class=\"column-right\" > \n                <button mat-icon-button  aria-label=\"Menu\" (click)=\"openMenu(element)\">\n                    <mat-icon>more_vert</mat-icon>\n                </button>\n              </td>\n          </ng-container>\n         \n          <tr mat-header-row *matHeaderRowDef=\"displayedColumns\"></tr>\n          <tr mat-row *matRowDef=\"let row; columns: displayedColumns;\">\n          </tr>\n        </table>\n      \n        <!-- <mat-paginator showFirstLastButtons></mat-paginator> -->\n        <mat-paginator [length]=\"dataSource.totalElements\" \n        [pageSizeOptions]=\"[5, 10, 25, 100]\"></mat-paginator>\n      </div>\n      \n</div>  \n  \n</div>"
+module.exports = "<div class=\"panel panel-default\" >\n  <div class=\"panel-body\">\n   <h1 class=\"display-4\">\n     Solicitações de Ferias\n    </h1>\n\n  </div>\n</div>\n\n\n<div class=\"panel panel-default\">\n<div class=\"panel-body\">\n   <div class=\"row\">\n      <div class=\"col-md-3\" [ngClass]=\"{btnClicked: tipoPesquisa == 'vencendo'}\">\n          <button color=\"primary\"  mat-mini-fab aria-label=\"Vencendo\" (click)=\"trocaTipoLista('vencendo')\">\n              <mat-icon>warning</mat-icon>\n          </button>\n          <span>   Vencendo</span>\n      </div>\n      <div class=\"col-md-3\"  [ngClass]=\"{btnClicked: tipoPesquisa == 'all'}\">\n          <button color=\"primary\"  mat-mini-fab aria-label=\"Vencendo\" (click)=\"trocaTipoLista('all')\">\n              <mat-icon>done_all</mat-icon>\n          </button>\n          <span>   Todos </span>\n      </div>\n      <div class=\"col-md-6\">\n          <mat-form-field>\n              <mat-label>Meses</mat-label>\n              <mat-select matNativeControl class=\"full-width\"  [(value)]=\"meses\">\n                  <mat-option *ngFor=\"let number of [1,2,3,4,5,6,7,8,9,10,11,12]\"  [(value)]=\"meses\">\n                      <div *ngIf=\"number == 1\" >{{number}} Mes</div>\n                      <div *ngIf=\"number > 1\" >{{number}} Meses</div>\n                  </mat-option>\n              </mat-select>\n          </mat-form-field>\n      </div>\n  </div>\n  <hr>\n  <div class=\"row\">\n      <div class=\"col-md-3\">\n        <mat-form-field>\n            <mat-label>Campo</mat-label>\n            <mat-select matNativeControl class=\"full-width\" [(value)]=\"campo\">\n                <mat-option  value=\"nome\" >Nome</mat-option>\n                <mat-option  value=\"matricula\" >Matricula</mat-option>\n            </mat-select>\n            \n        </mat-form-field>\n      </div>\n      <div class=\"col-md-6\">\n          <mat-form-field class=\"full-width\">\n            <input matInput placeholder=\"Buscar\" [(ngModel)]=\"pesquisa\" (keyup.enter)=\"loadPages()\">\n          </mat-form-field>\n      </div>\n      <div class=\"col-md-3\">\n          <button mat-raised-button color=\"accent\" class=\"full-width\" aria-label=\"Buscar\" (click)=\"loadPages()\">\n              Buscar <mat-icon>search</mat-icon>\n          </button>\n      </div>\n  </div>\n</div>\n<div class=\"panel-body\">\n    <div class=\"mat-elevation-z8\">\n\n        <table mat-table [dataSource]=\"dataSource\">\n          <ng-container  matColumnDef=\"funcionario\">\n            <th mat-header-cell *matHeaderCellDef> Funcionario. </th>\n            <td mat-cell *matCellDef=\"let element\"> {{element.funcionario.nome}} </td>\n          </ng-container>\n          \n          <ng-container matColumnDef=\"equipe\">\n              <th mat-header-cell *matHeaderCellDef  > Equipe  </th>\n              <td mat-cell *matCellDef=\"let element\" > {{element.funcionario.equipe.nome}} </td>\n          </ng-container>\n      \n          <ng-container matColumnDef=\"dataIni\">\n              <th mat-header-cell *matHeaderCellDef > Data Ini </th>\n              <td mat-cell *matCellDef=\"let element\" > {{element.dataInicial}} </td>\n          </ng-container>\n\n          <ng-container matColumnDef=\"dataFim\">\n            <th mat-header-cell *matHeaderCellDef > Data Final </th>\n            <td mat-cell *matCellDef=\"let element\" > {{element.dataFinal}} </td>\n          </ng-container>\n\n          <!-- Btn  -->\n          <ng-container matColumnDef=\"detalhes\">\n              <th mat-header-cell *matHeaderCellDef class=\"column-right\" > Acao </th>\n              <td mat-cell *matCellDef=\"let element\" class=\"column-right\" > \n                <button mat-icon-button  aria-label=\"Menu\" (click)=\"openMenu(element)\">\n                    <mat-icon>more_vert</mat-icon>\n                </button>\n              </td>\n          </ng-container>\n         \n          <tr mat-header-row *matHeaderRowDef=\"displayedColumns\"></tr>\n          <tr mat-row *matRowDef=\"let row; columns: displayedColumns;\">\n          </tr>\n        </table>\n      \n        <!-- <mat-paginator showFirstLastButtons></mat-paginator> -->\n        <mat-paginator [length]=\"dataSource.totalElements\" \n        [pageSizeOptions]=\"[5, 10, 25, 100]\"></mat-paginator>\n      </div>\n      \n</div>  \n  \n</div>"
 
 /***/ }),
 
@@ -1156,6 +1164,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_shared_bottom_bottom_button_component__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! src/app/shared/bottom/bottom-button.component */ "./src/app/shared/bottom/bottom-button.component.ts");
 /* harmony import */ var _sc_ferias_data_source__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ./sc-ferias-data.source */ "./src/app/ferias/lista-ferias/sc-ferias-data.source.ts");
 /* harmony import */ var _cad_ferias_cad_ferias_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../cad-ferias/cad-ferias.component */ "./src/app/ferias/cad-ferias/cad-ferias.component.ts");
+/* harmony import */ var src_app_services_sidenav_service__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! src/app/services/sidenav.service */ "./src/app/services/sidenav.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1176,23 +1185,36 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var ListaFeriasComponent = /** @class */ (function () {
-    function ListaFeriasComponent(bottomSheet, router, user, service, msgService, dialog) {
+    function ListaFeriasComponent(bottomSheet, router, user, service, msgService, dialog, _sideNavService) {
         this.bottomSheet = bottomSheet;
         this.router = router;
         this.user = user;
         this.service = service;
         this.msgService = msgService;
         this.dialog = dialog;
+        this._sideNavService = _sideNavService;
         this.displayedColumns = ['funcionario', 'equipe', 'dataIni', 'dataFim', 'detalhes'];
+        this.campo = "nome";
+        this.tipoPesquisa = "all";
+        this.meses = 1;
     }
     ListaFeriasComponent.prototype.ngOnInit = function () {
-        if (!this.user.isLogged())
-            this.router.navigate(['login']);
+        var _this = this;
+        this._sideNavService.getLogado().subscribe(function (logado) {
+            if (!logado) {
+                _this.router.navigate(['login']);
+            }
+        });
         this.dataSource = new _sc_ferias_data_source__WEBPACK_IMPORTED_MODULE_9__["ScFeriasDataSource"](this.service);
         this.loadPages();
     };
     ListaFeriasComponent.prototype.ngAfterViewInit = function () {
+    };
+    ListaFeriasComponent.prototype.trocaTipoLista = function (tipo) {
+        this.tipoPesquisa = tipo;
+        this.loadPages();
     };
     ListaFeriasComponent.prototype.openMenu = function (equipe) {
         var _this = this;
@@ -1224,7 +1246,7 @@ var ListaFeriasComponent = /** @class */ (function () {
         });
     };
     ListaFeriasComponent.prototype.loadPages = function () {
-        this.dataSource.load(this.paginator.pageIndex, this.paginator.pageSize, this.nome);
+        this.dataSource.load(this.paginator.pageIndex, this.paginator.pageSize, this.pesquisa, this.campo, this.tipoPesquisa, this.meses);
     };
     ListaFeriasComponent.prototype.vaiParaMenu = function (tip, obj) {
         this.openModal(tip, obj);
@@ -1244,7 +1266,8 @@ var ListaFeriasComponent = /** @class */ (function () {
             src_app_services_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"],
             src_app_services_generic_service__WEBPACK_IMPORTED_MODULE_6__["GenericService"],
             src_app_core_msg_service__WEBPACK_IMPORTED_MODULE_2__["MsgService"],
-            _angular_material_dialog__WEBPACK_IMPORTED_MODULE_7__["MatDialog"]])
+            _angular_material_dialog__WEBPACK_IMPORTED_MODULE_7__["MatDialog"],
+            src_app_services_sidenav_service__WEBPACK_IMPORTED_MODULE_11__["SidenavService"]])
     ], ListaFeriasComponent);
     return ListaFeriasComponent;
 }());
@@ -1285,17 +1308,16 @@ var ScFeriasDataSource = /** @class */ (function () {
     ScFeriasDataSource.prototype.disconnect = function (collectionViewer) {
         this.listSubject.complete();
     };
-    ScFeriasDataSource.prototype.load = function (page, size, nome) {
+    ScFeriasDataSource.prototype.load = function (page, size, pesquisa, campo, tipoPesquisa, meses) {
         var _this = this;
         if (page === void 0) { page = 0; }
         if (size === void 0) { size = 10; }
-        if (nome === void 0) { nome = ""; }
-        console.log("Equipe");
-        this.service.listBySolicitacaoFerias(page, size, nome).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["catchError"])(function () { return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["of"])([]); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["finalize"])(function () { return _this.loadingSubject.next(false); }))
+        if (pesquisa === void 0) { pesquisa = ""; }
+        this.service.listBySolicitacaoFerias(page, size, pesquisa, campo, tipoPesquisa, meses).pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["catchError"])(function () { return Object(rxjs__WEBPACK_IMPORTED_MODULE_1__["of"])([]); }), Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["finalize"])(function () { return _this.loadingSubject.next(false); }))
             .subscribe(function (res) {
             _this.listSubject.next(res.data);
-            _this.totalElements = 0;
-            _this.totalPages = 0;
+            _this.totalElements = res.totalElements;
+            _this.totalPages = res.totalPages;
         });
     };
     return ScFeriasDataSource;
@@ -1723,6 +1745,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var src_app_shared_bottom_bottom_button_component__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! src/app/shared/bottom/bottom-button.component */ "./src/app/shared/bottom/bottom-button.component.ts");
 /* harmony import */ var _cad_funcionario_cad_funcionario_component__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../cad-funcionario/cad-funcionario.component */ "./src/app/funcionarios/cad-funcionario/cad-funcionario.component.ts");
 /* harmony import */ var src_app_ferias_cad_ferias_cad_ferias_component__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! src/app/ferias/cad-ferias/cad-ferias.component */ "./src/app/ferias/cad-ferias/cad-ferias.component.ts");
+/* harmony import */ var src_app_services_sidenav_service__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! src/app/services/sidenav.service */ "./src/app/services/sidenav.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -1744,19 +1767,25 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var ListaFuncionariosComponent = /** @class */ (function () {
-    function ListaFuncionariosComponent(bottomSheet, router, user, service, msgService, dialog) {
+    function ListaFuncionariosComponent(bottomSheet, router, user, service, msgService, dialog, _sideNavService) {
         this.bottomSheet = bottomSheet;
         this.router = router;
         this.user = user;
         this.service = service;
         this.msgService = msgService;
         this.dialog = dialog;
+        this._sideNavService = _sideNavService;
         this.displayedColumns = ['matricula', 'foto', 'nome', 'dataNascimento', 'dataAdmissao', 'equipe', 'detalhes'];
     }
     ListaFuncionariosComponent.prototype.ngOnInit = function () {
-        if (!this.user.isLogged())
-            this.router.navigate(['login']);
+        var _this = this;
+        this._sideNavService.getLogado().subscribe(function (logado) {
+            if (!logado) {
+                _this.router.navigate(['login']);
+            }
+        });
         this.dataSource = new _funcionarios_data_source__WEBPACK_IMPORTED_MODULE_4__["FuncionariosDataSource"](this.service);
         this.loadPages();
     };
@@ -1847,7 +1876,8 @@ var ListaFuncionariosComponent = /** @class */ (function () {
             src_app_services_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"],
             src_app_services_generic_service__WEBPACK_IMPORTED_MODULE_8__["GenericService"],
             src_app_core_msg_service__WEBPACK_IMPORTED_MODULE_2__["MsgService"],
-            _angular_material_dialog__WEBPACK_IMPORTED_MODULE_6__["MatDialog"]])
+            _angular_material_dialog__WEBPACK_IMPORTED_MODULE_6__["MatDialog"],
+            src_app_services_sidenav_service__WEBPACK_IMPORTED_MODULE_12__["SidenavService"]])
     ], ListaFuncionariosComponent);
     return ListaFuncionariosComponent;
 }());
@@ -2196,9 +2226,17 @@ var HeaderComponent = /** @class */ (function () {
         this.logado = false;
     }
     HeaderComponent.prototype.ngOnInit = function () {
-        this.logado = this.user.isLogged();
+        var _this = this;
+        console.log("logar");
+        this._sidenavService.getLogado().subscribe(function (logou) {
+            if (logou)
+                _this.logado = true;
+            else
+                _this.logado = false;
+        });
     };
     HeaderComponent.prototype.deslogar = function () {
+        this._sidenavService.deslogar();
         this.user.logout();
         this.logado = this.user.isLogged();
     };
@@ -2258,6 +2296,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_sidenav_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../services/sidenav.service */ "./src/app/services/sidenav.service.ts");
 /* harmony import */ var src_app_animations_animations__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! src/app/animations/animations */ "./src/app/animations/animations.ts");
 /* harmony import */ var src_app_services_user_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! src/app/services/user.service */ "./src/app/services/user.service.ts");
+/* harmony import */ var src_app_services_generic_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! src/app/services/generic.service */ "./src/app/services/generic.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2271,10 +2310,12 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var LeftMenuComponent = /** @class */ (function () {
-    function LeftMenuComponent(_sidenavService, user) {
+    function LeftMenuComponent(_sidenavService, user, service) {
         this._sidenavService = _sidenavService;
         this.user = user;
+        this.service = service;
         this.sideNavState = false;
         this.linkText = false;
         this.pages = [
@@ -2284,8 +2325,29 @@ var LeftMenuComponent = /** @class */ (function () {
         ];
     }
     LeftMenuComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.nameUser = this.user.getUserName();
+        this.user.getUser().subscribe(function (res) {
+            if (res) {
+                _this.getUserDecoded();
+            }
+            else {
+                _this.nameUser = "";
+                _this._sidenavService.deslogar();
+            }
+        });
         console.log(this.nameUser);
+    };
+    LeftMenuComponent.prototype.getUserDecoded = function () {
+        var idUser = this.user.getIdUser();
+        this.getDadosUsuario(idUser);
+    };
+    LeftMenuComponent.prototype.getDadosUsuario = function (idUser) {
+        var _this = this;
+        this.service.getUsuario(idUser).subscribe(function (res) {
+            if (res.status == "SUCESSO")
+                _this.nameUser = res.data.nome;
+        });
     };
     LeftMenuComponent.prototype.onSinenavToggle = function () {
         var _this = this;
@@ -2302,7 +2364,9 @@ var LeftMenuComponent = /** @class */ (function () {
             animations: [src_app_animations_animations__WEBPACK_IMPORTED_MODULE_2__["onSideNavChange"], src_app_animations_animations__WEBPACK_IMPORTED_MODULE_2__["animateText"]],
             styles: [__webpack_require__(/*! ./left-menu.component.css */ "./src/app/nav/left-menu/left-menu.component.css")]
         }),
-        __metadata("design:paramtypes", [_services_sidenav_service__WEBPACK_IMPORTED_MODULE_1__["SidenavService"], src_app_services_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"]])
+        __metadata("design:paramtypes", [_services_sidenav_service__WEBPACK_IMPORTED_MODULE_1__["SidenavService"],
+            src_app_services_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"],
+            src_app_services_generic_service__WEBPACK_IMPORTED_MODULE_4__["GenericService"]])
     ], LeftMenuComponent);
     return LeftMenuComponent;
 }());
@@ -2482,9 +2546,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_common_http__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/common/http */ "./node_modules/@angular/common/fesm5/http.js");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs/operators */ "./node_modules/rxjs/_esm5/operators/index.js");
 /* harmony import */ var _user_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./user.service */ "./src/app/services/user.service.ts");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
-/* harmony import */ var ng_block_ui__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ng-block-ui */ "./node_modules/ng-block-ui/fesm5/ng-block-ui.js");
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../config */ "./src/app/config.ts");
+/* harmony import */ var ng_block_ui__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ng-block-ui */ "./node_modules/ng-block-ui/fesm5/ng-block-ui.js");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../config */ "./src/app/config.ts");
+/* harmony import */ var _sidenav_service__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./sidenav.service */ "./src/app/services/sidenav.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2502,15 +2566,15 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 var AuthService = /** @class */ (function () {
-    function AuthService(userService, router, http) {
+    function AuthService(userService, sideService, http) {
         this.userService = userService;
-        this.router = router;
+        this.sideService = sideService;
         this.http = http;
     }
     AuthService.prototype.authenticate = function (user) {
         var _this = this;
         this.blockUI.start("Logando ....");
-        return this.http.post(_config__WEBPACK_IMPORTED_MODULE_6__["Config"].api + '/auth', user)
+        return this.http.post(_config__WEBPACK_IMPORTED_MODULE_5__["Config"].api + '/auth', user)
             .pipe(Object(rxjs_operators__WEBPACK_IMPORTED_MODULE_2__["finalize"])(function () {
             console.log('Finalizado ...');
             _this.blockUI.stop();
@@ -2518,6 +2582,7 @@ var AuthService = /** @class */ (function () {
             .subscribe(function (res) {
             if (res.status == "SUCESSO") {
                 _this.userService.setToken(res.data.token);
+                _this.sideService.logar();
                 console.log('User authenticated with token res.data.token');
                 return true;
             }
@@ -2528,7 +2593,7 @@ var AuthService = /** @class */ (function () {
         });
     };
     __decorate([
-        Object(ng_block_ui__WEBPACK_IMPORTED_MODULE_5__["BlockUI"])(),
+        Object(ng_block_ui__WEBPACK_IMPORTED_MODULE_4__["BlockUI"])(),
         __metadata("design:type", Object)
     ], AuthService.prototype, "blockUI", void 0);
     AuthService = __decorate([
@@ -2536,7 +2601,7 @@ var AuthService = /** @class */ (function () {
             providedIn: 'root'
         }),
         __metadata("design:paramtypes", [_user_service__WEBPACK_IMPORTED_MODULE_3__["UserService"],
-            _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"],
+            _sidenav_service__WEBPACK_IMPORTED_MODULE_6__["SidenavService"],
             _angular_common_http__WEBPACK_IMPORTED_MODULE_1__["HttpClient"]])
     ], AuthService);
     return AuthService;
@@ -2573,6 +2638,10 @@ var GenericService = /** @class */ (function () {
     function GenericService(request) {
         this.request = request;
     }
+    //
+    GenericService.prototype.getUsuario = function (idUser) {
+        return this.request.get('/sign?idUser=' + idUser);
+    };
     // services equipes
     GenericService.prototype.listarEquipes = function (page, size, nome) {
         return this.request.get('/equipe');
@@ -2603,8 +2672,10 @@ var GenericService = /** @class */ (function () {
         return this.request.delete('/funcionario/' + id);
     };
     /// services ferias
-    GenericService.prototype.listBySolicitacaoFerias = function (page, size, nome) {
-        return this.request.get('/ferias');
+    GenericService.prototype.listBySolicitacaoFerias = function (page, size, pesquisa, campo, tipoPesquisa, meses) {
+        return this.request.get('/ferias?page=' + page +
+            '&size=' + size + '&pesquisa=' + pesquisa +
+            '&campo=' + campo + '&tipoPesquisa=' + tipoPesquisa + '&meses=' + meses);
     };
     GenericService.prototype.listByFeriasVencendo = function (page, size, nome) {
         return this.request.get('ferias/listByFeriasVencendo');
@@ -2646,6 +2717,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SidenavService", function() { return SidenavService; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs */ "./node_modules/rxjs/_esm5/index.js");
+/* harmony import */ var _user_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./user.service */ "./src/app/services/user.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2657,11 +2729,15 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 };
 
 
+
 var SidenavService = /** @class */ (function () {
-    function SidenavService() {
+    function SidenavService(user) {
+        this.user = user;
         // With this subject you can save the sidenav state and consumed later into other pages.
         this.sideNavState$ = new rxjs__WEBPACK_IMPORTED_MODULE_1__["Subject"]();
         this.logado = new rxjs__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"](false);
+        if (this.user.isLogged)
+            this.logado.next(true);
     }
     SidenavService.prototype.getLogado = function () {
         return this.logado.asObservable();
@@ -2674,7 +2750,7 @@ var SidenavService = /** @class */ (function () {
     };
     SidenavService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])(),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [_user_service__WEBPACK_IMPORTED_MODULE_2__["UserService"]])
     ], SidenavService);
     return SidenavService;
 }());
@@ -2742,6 +2818,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _token_service__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./token.service */ "./src/app/services/token.service.ts");
 /* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! jwt-decode */ "./node_modules/jwt-decode/lib/index.js");
 /* harmony import */ var jwt_decode__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(jwt_decode__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _generic_service__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./generic.service */ "./src/app/services/generic.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2755,15 +2832,18 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
 var UserService = /** @class */ (function () {
-    function UserService(tokenService) {
+    function UserService(tokenService, service) {
         this.tokenService = tokenService;
+        this.service = service;
         this.userSubject = new rxjs__WEBPACK_IMPORTED_MODULE_1__["BehaviorSubject"](null);
         this.tokenService.hasToken() &&
             this.decodeAndNotify();
     }
     UserService.prototype.setToken = function (token) {
         this.tokenService.setToken(token);
+        this.userSubject.next(true);
         this.decodeAndNotify();
     };
     UserService.prototype.getUser = function () {
@@ -2773,6 +2853,7 @@ var UserService = /** @class */ (function () {
         var token = this.tokenService.getToken();
         var user = jwt_decode__WEBPACK_IMPORTED_MODULE_3__(token);
         this.userName = user.name;
+        this.idUser = user.sub;
         this.userSubject.next(user);
         console.log("A");
     };
@@ -2786,9 +2867,12 @@ var UserService = /** @class */ (function () {
     UserService.prototype.getUserName = function () {
         return this.userName;
     };
+    UserService.prototype.getIdUser = function () {
+        return this.idUser;
+    };
     UserService = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"])({ providedIn: 'root' }),
-        __metadata("design:paramtypes", [_token_service__WEBPACK_IMPORTED_MODULE_2__["TokenService"]])
+        __metadata("design:paramtypes", [_token_service__WEBPACK_IMPORTED_MODULE_2__["TokenService"], _generic_service__WEBPACK_IMPORTED_MODULE_4__["GenericService"]])
     ], UserService);
     return UserService;
 }());
@@ -2921,6 +3005,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_forms__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/forms */ "./node_modules/@angular/forms/fesm5/forms.js");
 /* harmony import */ var ng_block_ui__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ng-block-ui */ "./node_modules/ng-block-ui/fesm5/ng-block-ui.js");
 /* harmony import */ var _services_auth_service__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../services/auth.service */ "./src/app/services/auth.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
+/* harmony import */ var _services_sidenav_service__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../services/sidenav.service */ "./src/app/services/sidenav.service.ts");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -2934,12 +3020,17 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
 
 
 
+
+
 var LoginComponent = /** @class */ (function () {
-    function LoginComponent(formBuilder, auth) {
+    function LoginComponent(formBuilder, auth, router, _sideNavService) {
         this.formBuilder = formBuilder;
         this.auth = auth;
+        this.router = router;
+        this._sideNavService = _sideNavService;
         this.emailForm = "";
         this.senhaForm = "";
+        this.logado = false;
         this.user = {};
         this.loginForm = this.formBuilder.group({
             email: ['', _angular_forms__WEBPACK_IMPORTED_MODULE_1__["Validators"].required],
@@ -2947,12 +3038,21 @@ var LoginComponent = /** @class */ (function () {
         });
     }
     LoginComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this._sideNavService.getLogado().subscribe(function (logado) {
+            _this.logado = logado;
+            if (logado) {
+                _this.router.navigate(['user']);
+            }
+        });
     };
     LoginComponent.prototype.login = function () {
         this.user.email = this.emailForm;
         this.user.pass = this.senhaForm;
-        if (this.auth.authenticate(this.user))
+        if (this.auth.authenticate(this.user)) {
             alert("Logou");
+            this.router.navigate(['user']);
+        }
     };
     __decorate([
         Object(ng_block_ui__WEBPACK_IMPORTED_MODULE_2__["BlockUI"])(),
@@ -2965,7 +3065,9 @@ var LoginComponent = /** @class */ (function () {
             styles: [__webpack_require__(/*! ./login.component.css */ "./src/app/sigin/login.component.css")]
         }),
         __metadata("design:paramtypes", [_angular_forms__WEBPACK_IMPORTED_MODULE_1__["FormBuilder"],
-            _services_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"]])
+            _services_auth_service__WEBPACK_IMPORTED_MODULE_3__["AuthService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_4__["Router"],
+            _services_sidenav_service__WEBPACK_IMPORTED_MODULE_5__["SidenavService"]])
     ], LoginComponent);
     return LoginComponent;
 }());
@@ -3052,7 +3154,7 @@ module.exports = "\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  Usuario Logado!\n</p>\n"
+module.exports = "<div class=\"panel panel-default\">\n  <div class=\"panel-body\">\n      <div *ngIf=\"logado\">\n        <p>\n          Usuario Logado!\n        </p>\n      </div>\n      <div *ngIf=\"!logado\">\n        <p>\n          Usuario deslogado!\n        </p>\n      </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -3067,6 +3169,8 @@ module.exports = "<p>\n  Usuario Logado!\n</p>\n"
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "UserComponent", function() { return UserComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "./node_modules/@angular/core/fesm5/core.js");
+/* harmony import */ var _services_sidenav_service__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../services/sidenav.service */ "./src/app/services/sidenav.service.ts");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "./node_modules/@angular/router/fesm5/router.js");
 var __decorate = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -3077,10 +3181,22 @@ var __metadata = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
 var UserComponent = /** @class */ (function () {
-    function UserComponent() {
+    function UserComponent(_sideNavService, router) {
+        this._sideNavService = _sideNavService;
+        this.router = router;
+        this.logado = false;
     }
     UserComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this._sideNavService.getLogado().subscribe(function (logado) {
+            _this.logado = logado;
+            if (!logado) {
+                _this.router.navigate(['login']);
+            }
+        });
     };
     UserComponent = __decorate([
         Object(_angular_core__WEBPACK_IMPORTED_MODULE_0__["Component"])({
@@ -3088,7 +3204,8 @@ var UserComponent = /** @class */ (function () {
             template: __webpack_require__(/*! ./user.component.html */ "./src/app/user/user.component.html"),
             styles: [__webpack_require__(/*! ./user.component.css */ "./src/app/user/user.component.css")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [_services_sidenav_service__WEBPACK_IMPORTED_MODULE_1__["SidenavService"],
+            _angular_router__WEBPACK_IMPORTED_MODULE_2__["Router"]])
     ], UserComponent);
     return UserComponent;
 }());
@@ -3217,7 +3334,7 @@ Object(_angular_platform_browser_dynamic__WEBPACK_IMPORTED_MODULE_1__["platformB
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! /home/robson/Documentos/projetos/testeCastGroup/frontend/src/main.ts */"./src/main.ts");
+module.exports = __webpack_require__(/*! /home/robson/projetos/testeCastGroup/frontend/src/main.ts */"./src/main.ts");
 
 
 /***/ })
